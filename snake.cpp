@@ -1,12 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
-#include <iostream>
-#include <sys/ioctl.h>
-#include <termios.h>
 
 // Had to find and copy functions for getch() and kbhit() as
 // conio.h is not POSIX compatible and did not run properly on my system
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <termios.h>
 
 bool kbhit()
 {
@@ -38,79 +37,80 @@ int getch(void)
     return ch;
 }
 
-int height = 20, width = 20, score;
+int height = 20, width = 20, score, dir;
 int snakex, snakey, fruitx, fruity;
-char dir;
 bool gameover;
 
-void generation()
+void fruit()
 {
     gameover = false;
     snakex = height / 2;
     snakey = width / 2;
-
 fruithor:
     fruitx = rand() % 20;
     if (fruitx == 0)
     {
         goto fruithor;
     }
-
 fruitver:
     fruity = rand() % 20;
     if (fruity == 0)
     {
         goto fruitver;
     }
-
-    score = 0;
 }
 
-void boundaries()
+void borders()
 {
     system("clear");
     for (int i = 0; i < height; ++i)
     {
         for (int j = 0; j < width; ++j)
         {
-            if (i == 0 || j == 0 || i == (width - 1) || j == (height - 1))
+            if (i == 0 || j == 0 || i == width - 1 || j == height - 1)
             {
-                printf("%s", "X");
-            }
-            else if (i == snakex && j == snakey)
-            {
-                printf("%s", "0");
-            }
-            else if (i == fruitx && j == fruity)
-            {
-                printf("%s", "*");
+                printf("#");
             }
             else
             {
-                printf("%s", "");
+                if (i == snakex && j == snakey)
+                {
+                    printf("0");
+                }
+                else if (i == fruitx && j == fruity)
+                {
+                    printf("*");
+                }
+                else
+                {
+                    printf(" ");
+                }
             }
-            printf("\n");
         }
+        printf("\n");
     }
+
+    printf("Score: %d\n", score);
+    printf("Press X to quit");
 }
 
-void keys()
+void buttons()
 {
     if (kbhit())
     {
         switch (getch())
         {
         case 'w':
-            dir = 'u';
+            dir = 1;
             break;
         case 'a':
-            dir = 'l';
+            dir = 2;
             break;
         case 's':
-            dir = 'd';
+            dir = 3;
             break;
         case 'd':
-            dir = 'r';
+            dir = 4;
             break;
         case 'x':
             gameover = true;
@@ -119,21 +119,21 @@ void keys()
     }
 }
 
-void movement()
+void move()
 {
     sleep(0.01);
     switch (dir)
     {
-    case 'u':
+    case 1:
         --snakex;
         break;
-    case 'l':
+    case 2:
         --snakey;
         break;
-    case 'd':
+    case 3:
         ++snakex;
         break;
-    case 'r':
+    case 4:
         ++snakey;
         break;
     default:
@@ -144,20 +144,19 @@ void movement()
     {
         gameover = true;
     }
-
     if (snakex == fruitx && snakey == fruity)
     {
-    fruitinitx:
+    fruitreachx:
         fruitx = rand() % 20;
         if (fruitx == 0)
         {
-            goto fruitinitx;
+            goto fruitreachx;
         }
-    fruitinity:
+    fruitreachy:
         fruity = rand() % 20;
         if (fruity == 0)
         {
-            goto fruitinity;
+            goto fruitreachy;
         }
         score += 10;
     }
@@ -165,12 +164,12 @@ void movement()
 
 int main()
 {
-    generation();
-    boundaries();
-    keys();
+    borders();
+    buttons();
     while (!gameover)
     {
-        movement();
+        fruit();
+        move();
     }
     return 0;
 }

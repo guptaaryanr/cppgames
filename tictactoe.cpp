@@ -121,14 +121,7 @@ int main()
         ++player;
     } while (status == -1);
     draw_board();
-    if (status == 1)
-    {
-        printf("\aPlayer %d wins", --player);
-    }
-    else
-    {
-        printf("\aDraw");
-    }
+    (status == 1) ? printf("\aPlayer %d wins", --player) : printf("\aDraw");
     cin.ignore();
     cin.get();
     return 0;
