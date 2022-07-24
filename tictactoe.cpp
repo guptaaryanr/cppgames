@@ -1,155 +1,135 @@
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
 
-#define COMP 1
-#define HUMAN 2
-#define SIDE 3
-#define COMPMOVE 'O'
-#define HUMANMOVE 'X'
+char board[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
-void board_status(char board[][SIDE])
+int game_status()
 {
-    printf("\n\n");
-    printf("\t\t\t %c | %c | %c \n", board[0][0], board[0][1], board[0][2]);
-    printf("\t\t\t--------------\n");
-    printf("\t\t\t %c | %c | %c \n", board[1][0], board[1][1], board[1][2]);
-    printf("\t\t\t--------------\n");
-    printf("\t\t\t %c | %c | %c \n", board[2][0], board[2][1], board[2][2]);
-}
-
-void instruction_display()
-{
-    printf("\t\t\t Tic-Tac-Toe by Aryan\n\n");
-    printf("Choose a ceel from 1 to 9 as below\n\n");
-    printf("\t\t\t 1 | 2 | 3 \n");
-    printf("\t\t\t--------------\n");
-    printf("\t\t\t 4 | 5 | 6 \n");
-    printf("\t\t\t--------------\n");
-    printf("\t\t\t 7 | 8 | 9 \n");
-    printf("-\t-\t-\t-\t-\t-\t-\t-\t-\t-\n\n");
-}
-
-void init(char board[][SIDE], int moves[])
-{
-    srand(time(NULL));
-    for (int i = 0; i < SIDE; ++i)
+    if (board[1] == board[2] && board[2] == board[3])
     {
-        for (int j = 0; j < SIDE; ++j)
-        {
-            board[i][j] = ' ';
-        }
+        return 1;
     }
-    for (int i = 0; i < SIDE * SIDE; ++i)
+    else if (board[4] == board[5] && board[5] == board[6])
     {
-        moves[i] = i;
+        return 1;
     }
-    random_shuffle(moves, moves + SIDE * SIDE);
-}
-
-void winner(int turn)
-{
-    if (turn == COMP)
+    else if (board[7] == board[8] && board[8] == board[9])
     {
-        printf("WINNER COMP\n");
+        return 1;
+    }
+    else if (board[1] == board[4] && board[4] == board[7])
+    {
+        return 1;
+    }
+    else if (board[2] == board[5] && board[5] == board[8])
+    {
+        return 1;
+    }
+    else if (board[3] == board[6] && board[6] == board[9])
+    {
+        return 1;
+    }
+    else if (board[1] == board[5] && board[5] == board[9])
+    {
+        return 1;
+    }
+    else if (board[3] == board[5] && board[5] == board[7])
+    {
+        return 1;
+    }
+    else if (board[1] != '1' && board[2] != '2' && board[3] != '3' && board[4] != '4' && board[5] != '5' && board[6] != '6' && board[7] != '7' && board[8] != '8' && board[9] != '9')
+    {
+        return 0;
     }
     else
     {
-        printf("WINNER HUMAN\n");
+        return -1;
     }
 }
 
-bool crossrow(char board[][SIDE])
+void draw_board()
 {
-    for (int i = 0; i < SIDE; ++i)
-    {
-        if (board[i][0] == board[i][1] && board[i][1] == board[i][2] && board[i][0] != ' ')
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool crosscolumn(char board[][SIDE])
-{
-    for (int i = 0; i < SIDE; ++i)
-    {
-        if (board[0][i] == board[i][1] && board[1][i] == board[2][i] && board[0][i] != ' ')
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool crossdiag(char board[][SIDE])
-{
-    if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[0][0] != ' ')
-    {
-        return true;
-    }
-    if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && board[0][2] != ' ')
-    {
-        return true;
-    }
-    return false;
-}
-
-bool gameover(char board[][SIDE])
-{
-    return (crossrow(board) || crosscolumn(board) || crossdiag(board));
-}
-
-void play(int turn)
-{
-    char board[SIDE][SIDE];
-    int moves[SIDE * SIDE];
-    init(board, moves);
-    instruction_display();
-    int move = 0, x, y;
-    while (!gameover(board) && move != SIDE * SIDE)
-    {
-        if (turn == COMP)
-        {
-            x = moves[move] / SIDE;
-            y = moves[move] % SIDE;
-            board[x][y] = COMPMOVE;
-            printf("COMP has moved %c to cell %d\n", COMPMOVE, moves[move] + 1);
-            board_status(board);
-            ++move;
-            turn = HUMAN;
-        }
-        else if (turn == HUMAN)
-        {
-            x = moves[move] / SIDE;
-            y = moves[move] % SIDE;
-            board[x][y] = HUMANMOVE;
-            printf("HUMAN has moved %c to cell %d\n", HUMANMOVE, moves[move] + 1);
-            board_status(board);
-            ++move;
-            turn = COMP;
-        }
-    }
-    if (!gameover(board) && move == SIDE * SIDE)
-    {
-        printf("Draw\n");
-    }
-    else
-    {
-        if (turn == COMP)
-        {
-            turn = HUMAN;
-        }
-        else if (turn == HUMAN)
-        {
-            turn = COMP;
-        }
-        winner(turn);
-    }
+    system("clear");
+    printf("\n\n\tTic Tac Toe by Aryan\n\n");
+    printf("\tP1 (x) - P2 (o)\n\n\n");
+    printf("     |     |     \n");
+    printf("  %c  |  %c  |  %c  \n", board[1], board[2], board[3]);
+    printf("_____|_____|_____\n");
+    printf("     |     |     \n");
+    printf("  %c  |  %c  |  %c  \n", board[4], board[5], board[6]);
+    printf("_____|_____|_____\n");
+    printf("     |     |     \n");
+    printf("  %c  |  %c  |  %c  \n", board[7], board[8], board[9]);
+    printf("     |     |     \n");
 }
 
 int main()
 {
-    play(COMP);
+    int player = 1, block, status;
+    char token;
+    do
+    {
+        draw_board();
+        player = (player % 2) ? 1 : 2;
+        printf("Player %d, enter block (1-9): ", player);
+        cin >> block;
+        token = (player == 1) ? 'x' : 'o';
+        if (block == 1 && board[1] == '1')
+        {
+            board[1] = token;
+        }
+        else if (block == 2 && board[2] == '2')
+        {
+            board[2] = token;
+        }
+        else if (block == 3 && board[3] == '3')
+        {
+            board[3] = token;
+        }
+        else if (block == 4 && board[4] == '4')
+        {
+            board[4] = token;
+        }
+        else if (block == 5 && board[5] == '5')
+        {
+            board[5] = token;
+        }
+        else if (block == 6 && board[6] == '6')
+        {
+            board[6] = token;
+        }
+        else if (block == 7 && board[7] == '7')
+        {
+            board[7] = token;
+        }
+        else if (block == 8 && board[8] == '8')
+        {
+            board[8] = token;
+        }
+        else if (block == 9 && board[9] == '9')
+        {
+            board[9] = token;
+        }
+        else
+        {
+            printf("Invalid");
+            --player;
+            cin.ignore();
+            cin.get();
+        }
+        status = game_status();
+        ++player;
+    } while (status == -1);
+    draw_board();
+    if (status == 1)
+    {
+        printf("\aPlayer %d wins", --player);
+    }
+    else
+    {
+        printf("\aDraw");
+    }
+    cin.ignore();
+    cin.get();
     return 0;
 }
