@@ -166,10 +166,10 @@ void movement()
 int main()
 {
     generation();
+    boundaries();
+    keys();
     while (!gameover)
     {
-        boundaries();
-        keys();
         movement();
     }
     return 0;
